@@ -70,7 +70,6 @@ class Ui_Dialog(object):
         self.pushButton.clicked.connect(self.patch)
         self.pushButton_2.clicked.connect(self.clear_log)
 
-
     def open_iwfi(self):
         # Open IWFI
         title = "IWFI File"
@@ -128,10 +127,12 @@ class Ui_Dialog(object):
            self.textBrowser.append("BIOS Length : "+hex(bios_len))
            self.textBrowser.append("IWFI Length : " + str(len(ifwi_file)))
            ifwi_size = len(ifwi_file)
+
            if ifwi_size == 16777216:
-               print("yes")
                self.radioButton.setChecked(True)
-               self.radioButton.toggled.connect(lambda: self.rd1)
+
+           elif ifwi_size == 33554432:
+               self.radioButton_2.setChecked(True)
 
     def output_dir(self):
         global output_dir
@@ -186,7 +187,7 @@ class Ui_Dialog(object):
         combined_file = bytearray(len(ifwi_file))
         if self.radioButton.isChecked():
 
-            # FSP Path
+            # 16 MB IFWI Fit setting
             self.textBrowser.append("======= Start FIT 16MB IFWI to 11MB BIOS  ========")
             self.textBrowser.append("=== Start FIT 16MB IFWI to 11MB BIOS  ===")
             self.textBrowser.append("Start override offset 0x44 to 0x0")
@@ -206,6 +207,7 @@ class Ui_Dialog(object):
 
             combined_fileobj.write(combined_file)
         self.textBrowser.append("All process complete")
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
